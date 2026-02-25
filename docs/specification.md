@@ -63,14 +63,14 @@ rootProject.name = 'weather-api'
 ### `gradle.properties`
 
 ```properties
-gosuVersion=1.17.10
+gosuVersion=1.18.7
 ```
 
 ### `build.gradle`
 
 ```groovy
 plugins {
-    id 'org.gosu-lang.gosu' version '7.0.0'
+    id 'org.gosu-lang.gosu' version '8.0.1'
     id 'application'
 }
 
@@ -241,8 +241,9 @@ The application entry point. Contains `main()` and route setup.
 2. Parse latitude/longitude to `double`, date to `String`
 3. Call `WeatherService.fetchForecast(lat, lon, date)`
 4. Set response type to `application/json` and return the result
-5. Catch `IllegalArgumentException` → HTTP 400 with error JSON
-6. Catch all other exceptions → HTTP 502 with error JSON
+5. Catch `NumberFormatException` → HTTP 400 with error JSON (must come before `IllegalArgumentException` since it's a subclass)
+6. Catch `IllegalArgumentException` → HTTP 400 with error JSON
+7. Catch all other exceptions → HTTP 502 with error JSON
 
 ---
 
@@ -293,10 +294,13 @@ Gosu is a JVM language with Java-like syntax. Key patterns for this project:
 - **Variable declaration:** `var x = value` (type-inferred) or `var x : Type = value`
 - **String interpolation:** Not supported in standard Gosu — use string concatenation or `String.format()`
 - **Static methods:** Declared with `static` keyword, same as Java
+- **For loops:** Gosu uses `for...in` syntax, NOT C-style for loops. Use `for (i in 0..|n)` for index-based iteration (exclusive upper bound with `|`)
+- **Methods:** Use `function` keyword: `function myMethod(param : Type) : ReturnType { }`
 - **Properties:** Use `property get PropertyName(): Type` syntax
 - **Null handling:** Gosu supports `?.` for null-safe navigation
 - **Collections:** Java collections work directly; Gosu adds functional methods (`.map()`, `.where()`, etc.)
 - **Main method:** `static function main(args: String[])` in a class
+- **Anonymous classes:** Use `new Interface() { override function method() : Type { } }` syntax
 - **Source directory:** `src/main/gosu/` (not `src/main/java/`)
 - **Test directory:** `src/test/gosu/` (not `src/test/java/`)
 - **Test class:** Extends `gw.test.TestClass` from `gosu-test-api`

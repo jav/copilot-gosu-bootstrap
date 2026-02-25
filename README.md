@@ -305,7 +305,7 @@ Ensure your `build.gradle` includes the plugin with the correct ID:
 
 ```groovy
 plugins {
-    id 'org.gosu-lang.gosu' version '7.0.0'
+    id 'org.gosu-lang.gosu' version '8.0.1'
 }
 ```
 
