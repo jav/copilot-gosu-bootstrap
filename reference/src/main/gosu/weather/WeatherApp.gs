@@ -36,12 +36,12 @@ class WeatherApp {
           }
 
           return WeatherService.fetchForecast(lat, lon, date)
-        } catch (ex : IllegalArgumentException) {
-          res.status(400)
-          return new JSONObject().put("error", ex.getMessage()).toString()
         } catch (ex : NumberFormatException) {
           res.status(400)
           return new JSONObject().put("error", "Invalid numeric parameter: " + ex.getMessage()).toString()
+        } catch (ex : IllegalArgumentException) {
+          res.status(400)
+          return new JSONObject().put("error", ex.getMessage()).toString()
         } catch (ex : Exception) {
           res.status(502)
           return new JSONObject().put("error", "Failed to fetch forecast from upstream API").toString()

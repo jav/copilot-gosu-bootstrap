@@ -149,7 +149,7 @@ class WeatherServiceTest extends TestClass {
     var winds = new JSONArray()
     var humidities = new JSONArray()
 
-    for (var i = 0; i < hours; i++) {
+    for (i in 0..|hours) {
       var hourStr = (i < 10 ? "0" : "") + i
       times.put("2025-06-15T" + hourStr + ":00")
       temps.put(70.0 + i)

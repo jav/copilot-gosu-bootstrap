@@ -45,7 +45,7 @@ class WeatherService {
     if (response.statusCode() != 200) {
       throw new RuntimeException("Upstream API returned status " + response.statusCode())
     }
-    return response.body() as String
+    return response.body()
   }
 
   static function transformResponse(upstreamJson : String, lat : double, lon : double, date : String) : String {
@@ -59,7 +59,7 @@ class WeatherService {
     var humidities = hourlyData.getJSONArray("relative_humidity_2m")
 
     var hourlyArray = new JSONArray()
-    for (var i = 0; i < times.length(); i++) {
+    for (i in 0..|times.length()) {
       var entry = new JSONObject()
       entry.put("time", times.getString(i))
       entry.put("temperature_f", temps.getDouble(i))

@@ -115,7 +115,7 @@ class TestHarness {
         return null
       }
       printPass("Status " + actualStatus)
-      return response.body() as String
+      return response.body()
     } catch (ex : Exception) {
       printFail("Request failed: " + ex.getMessage())
       return null
