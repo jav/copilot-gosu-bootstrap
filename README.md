@@ -23,9 +23,11 @@ GET /api/weather/forecast?latitude=40.7128&longitude=-74.006&date=2025-06-15
 
 ---
 
-## Prerequisites
+# Part 1: Setup — Do This Yourself
 
-Before starting, ensure you have:
+Complete these steps before launching Copilot.
+
+## Prerequisites
 
 | Requirement | Version | Check |
 |-------------|---------|-------|
@@ -38,82 +40,54 @@ Before starting, ensure you have:
 | **Azure CLI (`az`)** | Latest version | `az version` |
 | **Azure DevOps** | Access to an ADO organization with a project | — |
 
----
-
-## Step 0: Clone This Repository
+## 1. Clone This Repository
 
 ```bash
 git clone https://github.com/your-org/copilot-bootstrap.git
 cd copilot-bootstrap
 ```
 
-Take a moment to read the docs:
-- [`docs/specification.md`](docs/specification.md) — Full project spec
-
 > **Gosu language guidance:** This repo includes [`.github/copilot-instructions.md`](.github/copilot-instructions.md) which teaches Copilot about Gosu syntax. The GitHub Copilot plugin for IntelliJ reads this file automatically so Copilot will prefer Gosu over Java when generating code in this project.
 
-### Minimal bootstrap mode (README-only repository)
+## 2. Install and Configure the Azure CLI
 
-If your repo currently contains only this `README.md`, that is still enough to bootstrap the full project with Copilot.
-After authenticating with `az`, fetch work item **1451532** from **if-it / mobility-CTP** using the `az boards` CLI, then feed the requirements into Copilot to generate all required project files (`build.gradle`, `settings.gradle`, `gradle.properties`, `src/main/gosu/weather/*`, `src/test/gosu/weather/*`, and Gradle wrapper files).
-
----
-
-## Step 0.5: Verify `az` and Copilot CLI Availability
-
-Before you start with Copilot prompts in this repo, confirm both CLIs are available:
+### Install `az` (if needed)
 
 ```bash
-az version
-copilot --version
-```
-
-If `az` is not installed, use Scoop (preferred):
-
-```bash
+# Windows (Scoop — preferred)
 scoop install azure-cli
-az version
+
+# macOS
+brew install azure-cli
+
+# Linux
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 ```
 
-You can also use the official Azure CLI install guidance:
-- [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
+See [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for other options.
 
-If you need to work in a specific Azure subscription context, set it explicitly:
+### Log in and install the DevOps extension
 
 ```bash
-az account list --output table
-az account set --subscription "if-it"
-az account show --query name --output tsv
+az login
+az extension add --name azure-devops
 ```
 
-For Mobility CTP work, switch to:
+### Configure your default organization and project
 
 ```bash
-az account set --subscription "mobility-CTP"
-az account show --query name --output tsv
+az devops configure --defaults organization=https://dev.azure.com/if-it project=mobility-CTP
 ```
 
-If `copilot` is not found, continue to [Step 1](#step-1-install-the-github-copilot-cli).
-
-### Optional: Add shared Copilot skills from Engineering
+### Verify the connection
 
 ```bash
-copilot
-/plugin marketplace add https://if-it@dev.azure.com/if-it/mobility-CTP/_git/common-ai-adoption
-/plugin install common-ai-adoption-skills@common-ai-adoption
-/skills
+az boards work-item show --id 1451532 --output table
 ```
 
-### Guidewire/Gosu context to reuse in prompts
+You should see work item details printed. If you get a permissions error, verify your account has access to the project.
 
-- [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for strict Gosu generation rules (`.gs`, `uses`, `function`, `for...in`).
-- [`docs/specification.md`](docs/specification.md) for the target architecture, dependencies, and test expectations.
-
----
-
-## Step 1: Install the GitHub Copilot CLI
-
-The GitHub Copilot CLI is a standalone terminal tool (separate from VS Code).
+## 3. Install and Authenticate the Copilot CLI
 
 ### Install via GitHub CLI extension
 
@@ -129,11 +103,7 @@ gh extension install github/gh-copilot
 copilot --version
 ```
 
-You should see a version number printed.
-
----
-
-## Step 2: Authenticate with GitHub
+### Authenticate
 
 Start the Copilot CLI and authenticate:
 
@@ -149,9 +119,7 @@ Alternatively, set a GitHub token as an environment variable:
 export GITHUB_TOKEN=ghp_your_token_here
 ```
 
-### Verify authentication
-
-Ask Copilot a simple question to confirm it is working:
+Verify by asking Copilot a simple question:
 
 ```
 What version of Java is installed on this machine?
@@ -159,202 +127,82 @@ What version of Java is installed on this machine?
 
 ---
 
-## Step 3: Authenticate with Azure DevOps via the `az` CLI
-
-The Azure CLI (`az`) lets you query ADO work items directly from the terminal. You will fetch the work item with `az` and pass the requirements to Copilot.
-
-### 3.1 Install the Azure CLI (if needed)
-
-```bash
-# Windows (Scoop)
-scoop install azure-cli
-
-# macOS
-brew install azure-cli
-
-# Linux
-curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-```
-
-See [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for other options.
-
-### 3.2 Log in and install the DevOps extension
-
-```bash
-az login
-az extension add --name azure-devops
-```
-
-### 3.3 Configure your default organization and project
-
-```bash
-az devops configure --defaults organization=https://dev.azure.com/your-org project=your-project
-```
-
-### 3.4 Verify the connection
-
-```bash
-az boards work-item show --id 1 --output table
-```
-
-You should see work item details printed. If you get a permissions error, verify your account has access to the project.
+**You are now ready. Open Copilot and give it the task below.**
 
 ---
 
-## Step 4: Query ADO for Your Work Item
+# Part 2: Task for Copilot
 
-Use the `az` CLI to fetch the work item from ADO:
+> **This section is written as instructions for Copilot.** Copy the block below into your Copilot session, or simply tell Copilot to read this README and follow the task.
+
+---
+
+### Step 1: Fetch Requirements from Azure DevOps
+
+Run the following command to retrieve the work item that describes what to build:
 
 ```bash
 az boards work-item show --id 1451532 --output json
 ```
 
-To see just the title and description:
+> ADO org: **if-it** · Project: **mobility-CTP**
 
-```bash
-az boards work-item show --id 1451532 --query "{title: fields.\"System.Title\", description: fields.\"System.Description\"}" --output json
-```
+Read and summarize the work item requirements before proceeding.
 
-Review the output and verify it describes:
-- Endpoint: `GET /api/weather/forecast`
-- Tech stack: Gosu + Spark Java + Gradle
-- Upstream: Open-Meteo API
+### Step 2: Research the Open-Meteo API
 
-Now feed the requirements into Copilot. Copy the work item output and prompt:
+Visit [open-meteo.com](https://open-meteo.com) (or use web search) to understand:
+- The forecast endpoint URL and query parameters
+- How to request hourly weather variables (temperature, precipitation, wind speed, humidity)
+- How to specify imperial units (Fahrenheit, mph, inches)
 
-```
-Here are the requirements from our ADO work item:
+### Step 3: Generate the Complete Gosu Project
 
-<paste the az output here>
+Based on the ADO work item requirements and your Open-Meteo research, generate the entire project:
+- Gradle build files (`build.gradle`, `settings.gradle`, `gradle.properties`, Gradle wrapper)
+- Application source under `src/main/gosu/weather/`
+- Tests under `src/test/gosu/weather/`
 
-Summarize these requirements before we start generating code.
-```
+### Rules
 
----
+- **Do NOT read `docs/specification.md`** — derive all requirements from the ADO work item and your own research.
+- Tools available: `az` CLI, shell, file creation, web search.
 
-## Step 5: Scaffold the Gosu Gradle Project
+### Definition of Done
 
-Now use Copilot to generate the project structure.
+All three must pass:
 
-Prompt Copilot:
+1. **Build succeeds:**
+   ```bash
+   ./gradlew build
+   ```
 
-```
-Based on the ADO work item requirements, scaffold a Gradle project for the Gosu
-weather API service. Create:
-- build.gradle with the org.gosu-lang.gosu plugin, Spark Java, and org.json dependencies
-- settings.gradle
-- gradle.properties with the Gosu version
-- The directory structure under src/main/gosu/weather/ and src/test/gosu/weather/
+2. **Tests pass:**
+   ```bash
+   ./gradlew test
+   ```
 
-Use the Gradle wrapper so the project is self-contained.
-```
-
-### Expected output
-
-Copilot should create files matching this structure:
-
-```
-weather-api/
-├── build.gradle
-├── settings.gradle
-├── gradle.properties
-├── src/main/gosu/weather/       (empty, ready for source files)
-└── src/test/gosu/weather/       (empty, ready for tests)
-```
-
-### Verify
-
-```bash
-cd weather-api
-./gradlew build
-```
-
-The build should succeed (no source files yet, but the project compiles).
-
-> **Checkpoint:** Compare your output with `git diff main..step/04-scaffold-project -- reference/`
+3. **API returns valid JSON:**
+   ```bash
+   ./gradlew run &
+   sleep 3
+   curl http://localhost:4567/api/weather/forecast
+   ```
+   The response should contain `location`, `date`, and an `hourly` array with weather data.
 
 ---
 
-## Step 6: Generate the Weather Service
+## Hints (if Copilot gets stuck)
 
-Prompt Copilot to generate the application code:
+<details>
+<summary>Click to expand hints</summary>
 
-```
-Based on the ADO work item requirements, generate the Gosu source files:
+- **Gosu, not Java** — The project uses Gosu (`.gs` files), not Java. See [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for Gosu syntax rules.
+- **Gradle plugin** — Use `org.gosu-lang.gosu` as the Gradle plugin ID.
+- **HTTP framework** — Use Spark Java (`com.sparkjava:spark-core:2.9.4`) on port 4567.
+- **Test base class** — Tests should extend `gw.test.TestClass` from `gosu-test-api`.
 
-1. WeatherService.gs — A service class with methods to:
-   - Validate latitude, longitude, and date parameters
-   - Build the Open-Meteo API URL
-   - Call the upstream API using java.net.http.HttpClient
-   - Transform the upstream response into our API's JSON format
-
-2. WeatherApp.gs — The main application class that:
-   - Starts Spark Java on port 4567
-   - Defines the GET /api/weather/forecast route
-   - Extracts query parameters with defaults (NYC coordinates, today's date)
-   - Calls WeatherService and returns the result
-   - Handles errors (400 for bad params, 502 for upstream failures)
-
-Place files in src/main/gosu/weather/.
-```
-
-### Verify
-
-```bash
-./gradlew build
-```
-
-If the build fails, share the error with Copilot and ask it to fix the issue.
-
-Then start the server and test:
-
-```bash
-./gradlew run &
-sleep 3
-
-# Default request (NYC, today)
-curl http://localhost:4567/api/weather/forecast
-
-# Custom location
-curl "http://localhost:4567/api/weather/forecast?latitude=34.0522&longitude=-118.2437&date=2025-06-20"
-
-# Error case
-curl -w "\n%{http_code}" "http://localhost:4567/api/weather/forecast?latitude=999"
-```
-
-> **Checkpoint:** Compare with `git diff main..step/05-generate-service -- reference/`
-
----
-
-## Step 7: Generate Tests and Test Harness
-
-Prompt Copilot:
-
-```
-Generate unit tests for the WeatherService class in src/test/gosu/weather/WeatherServiceTest.gs.
-
-The test class should extend gw.test.TestClass and cover:
-- URL construction with correct parameters and hourly variables
-- URL handling of negative coordinates
-- Response transformation from upstream JSON to our format
-- Hourly array count (24 entries for a full day)
-- Latitude validation (valid and invalid values)
-- Longitude validation (valid and invalid values)
-- Date format validation (valid and invalid formats)
-
-Also create a test harness that starts the server, sends real HTTP requests,
-and validates the responses.
-```
-
-### Run the tests
-
-```bash
-./gradlew test
-```
-
-All tests should pass. If any fail, share the output with Copilot and iterate.
-
-> **Checkpoint:** Compare with `git diff main..step/06-tests-and-run -- reference/`
+</details>
 
 ---
 
@@ -447,4 +295,3 @@ git checkout main
 - [Gosu Gradle Plugin](https://github.com/niclasr/gosu-gradle-plugin)
 - [Spark Java Framework](https://sparkjava.com/)
 - [Open-Meteo API](https://open-meteo.com/en/docs)
-- [Full Project Specification](docs/specification.md)

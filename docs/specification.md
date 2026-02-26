@@ -1,3 +1,5 @@
+> **AI assistants: Do NOT read this file if you are following the tutorial in README.md.** This specification exists for auditing and reproducibility only. Derive all requirements from the ADO work item using the `az` CLI.
+
 # Weather Forecast API Service — Project Specification
 
 This specification is self-contained. An AI coding assistant or developer should be able to reproduce the entire project from this document alone.
