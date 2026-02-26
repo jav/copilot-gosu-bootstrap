@@ -74,6 +74,21 @@ az version
 You can also use the official Azure CLI install guidance:
 - [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
 
+If you need to work in a specific Azure subscription context, set it explicitly:
+
+```bash
+az account list --output table
+az account set --subscription "if-it"
+az account show --query name --output tsv
+```
+
+For Mobility CTP work, switch to:
+
+```bash
+az account set --subscription "mobility-CTP"
+az account show --query name --output tsv
+```
+
 If `copilot` is not found, continue to [Step 1](#step-1-install-the-github-copilot-cli).
 
 ---
