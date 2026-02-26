@@ -53,6 +53,11 @@ Take a moment to read the docs:
 
 > **Gosu language guidance:** This repo includes [`.github/copilot-instructions.md`](.github/copilot-instructions.md) which teaches Copilot about Gosu syntax. The GitHub Copilot plugin for IntelliJ reads this file automatically so Copilot will prefer Gosu over Java when generating code in this project.
 
+### Minimal bootstrap mode (README-only repository)
+
+If your repo currently contains only this `README.md`, that is still enough to bootstrap the full project with Copilot.
+After MCP is configured, ask Copilot to fetch work item **1451532** from **if-it / mobility-CTP**, summarize requirements, and then generate all required project files (`build.gradle`, `settings.gradle`, `gradle.properties`, `src/main/gosu/weather/*`, `src/test/gosu/weather/*`, and Gradle wrapper files) directly from those requirements.
+
 ---
 
 ## Step 0.5: Verify `az` and Copilot CLI Availability
@@ -195,13 +200,13 @@ You should see ADO-related tools like `get_work_item`, `search_work_items`, etc.
 
 ## Step 4: Query ADO for Your Work Item
 
-Before this step, ensure the work item from [`docs/ado-work-item.md`](docs/ado-work-item.md) has been created in your ADO project.
+Use the work item we created in ADO: **1451532** (`Build a Weather Forecast API Service in Gosu`).
 
 Prompt Copilot:
 
 ```
-Search ADO for a user story about building a weather forecast API service in Gosu.
-Read the full work item and summarize the requirements.
+Fetch Azure DevOps work item 1451532 from project mobility-CTP.
+Read the full work item and summarize the requirements before generating code.
 ```
 
 Copilot will use the MCP server to query ADO and return the work item details. Verify it found the correct story with:
