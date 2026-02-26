@@ -61,7 +61,7 @@ Before you start with Copilot prompts in this repo, confirm both CLIs are availa
 
 ```bash
 az version
-gh copilot --version
+copilot --version
 ```
 
 If `az` is not installed, use Scoop (preferred):
@@ -74,7 +74,7 @@ az version
 You can also use the official Azure CLI install guidance:
 - [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
 
-If `gh copilot` is not found, continue to [Step 1](#step-1-install-the-github-copilot-cli).
+If `copilot` is not found, continue to [Step 1](#step-1-install-the-github-copilot-cli).
 
 ---
 
@@ -93,7 +93,7 @@ gh extension install github/gh-copilot
 ### Verify installation
 
 ```bash
-gh copilot --version
+copilot --version
 ```
 
 You should see a version number printed.
@@ -105,7 +105,7 @@ You should see a version number printed.
 Start the Copilot CLI and authenticate:
 
 ```bash
-gh copilot
+copilot
 ```
 
 If prompted, log in with your GitHub credentials. The CLI will open a browser for OAuth authentication.
