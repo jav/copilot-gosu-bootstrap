@@ -1,6 +1,6 @@
 # Copilot Bootstrap: Build a Gosu Weather API with GitHub Copilot CLI
 
-A hands-on tutorial for Guidewire developers to learn the **standalone GitHub Copilot CLI** with **Azure DevOps MCP** integration. You will use Copilot to generate a complete Gosu REST API service — from project scaffolding to tests — guided by a work item pulled from ADO.
+A hands-on tutorial for Guidewire developers to learn the **standalone GitHub Copilot CLI** with **Azure DevOps** integration via the `az` CLI. You will use Copilot to generate a complete Gosu REST API service — from project scaffolding to tests — guided by a work item pulled from ADO.
 
 ---
 
@@ -15,8 +15,8 @@ GET /api/weather/forecast?latitude=40.7128&longitude=-74.006&date=2025-06-15
 ## What You Will Learn
 
 - Installing and authenticating the GitHub Copilot CLI
-- Configuring an MCP server to connect Copilot to Azure DevOps
-- Querying ADO work items through natural language prompts
+- Using the Azure CLI (`az`) to query Azure DevOps work items
+- Feeding ADO work item requirements into Copilot prompts
 - Using Copilot to scaffold a Gradle + Gosu project from scratch
 - Generating application code and tests with AI assistance
 - Iterating on Copilot output until the project builds and runs
@@ -35,8 +35,8 @@ Before starting, ensure you have:
 | **IntelliJ IDEA** | 2024.1.5 or higher | — |
 | **GitHub Copilot plugin** | Installed in IntelliJ | IntelliJ → Settings → Plugins → "GitHub Copilot" |
 | **GitHub account** | With Copilot subscription (Individual, Business, or Enterprise) | — |
+| **Azure CLI (`az`)** | Latest version | `az version` |
 | **Azure DevOps** | Access to an ADO organization with a project | — |
-| **ADO Personal Access Token** | With Work Items (Read) scope | See [Step 3](#step-3-configure-the-azure-devops-mcp-server) |
 
 ---
 
@@ -56,7 +56,7 @@ Take a moment to read the docs:
 ### Minimal bootstrap mode (README-only repository)
 
 If your repo currently contains only this `README.md`, that is still enough to bootstrap the full project with Copilot.
-After MCP is configured, ask Copilot to fetch work item **1451532** from **if-it / mobility-CTP**, summarize requirements, and then generate all required project files (`build.gradle`, `settings.gradle`, `gradle.properties`, `src/main/gosu/weather/*`, `src/test/gosu/weather/*`, and Gradle wrapper files) directly from those requirements.
+After authenticating with `az`, fetch work item **1451532** from **if-it / mobility-CTP** using the `az boards` CLI, then feed the requirements into Copilot to generate all required project files (`build.gradle`, `settings.gradle`, `gradle.properties`, `src/main/gosu/weather/*`, `src/test/gosu/weather/*`, and Gradle wrapper files).
 
 ---
 
@@ -160,59 +160,76 @@ What version of Java is installed on this machine?
 
 ---
 
-## Step 3: Configure the Azure DevOps MCP Server
+## Step 3: Authenticate with Azure DevOps via the `az` CLI
 
-MCP (Model Context Protocol) servers let Copilot access external tools. You will configure the Azure DevOps MCP server so Copilot can read work items from your ADO project.
+The Azure CLI (`az`) lets you query ADO work items directly from the terminal. Copilot does not need a separate MCP server — you will fetch the work item with `az` and pass the requirements to Copilot.
 
-### 3.1 Create an ADO Personal Access Token
+### 3.1 Install the Azure CLI (if needed)
 
-1. Go to `https://dev.azure.com/{your-org}/_usersSettings/tokens`
-2. Click **New Token**
-3. Set a name (e.g., `copilot-mcp`)
-4. Set expiration as needed
-5. Under **Scopes**, select **Work Items → Read**
-6. Click **Create** and copy the token
+```bash
+# Windows (Scoop)
+scoop install azure-cli
 
-### 3.2 Add the MCP server to Copilot
+# macOS
+brew install azure-cli
 
-In your Copilot CLI session, run:
-
-```
-/mcp add ado-server https://github.com/microsoft/azure-devops-mcp -- \
-  --organization your-org \
-  --project your-project \
-  --token YOUR_ADO_PAT
+# Linux
+curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 ```
 
-> **Note:** The exact MCP server URL and flags may vary. Consult the [Azure DevOps MCP server documentation](https://github.com/microsoft/azure-devops-mcp) for the latest setup instructions.
+See [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) for other options.
 
-### 3.3 Verify the connection
+### 3.2 Log in and install the DevOps extension
 
-Ask Copilot:
-
+```bash
+az login
+az extension add --name azure-devops
 ```
-List the available MCP tools.
+
+### 3.3 Configure your default organization and project
+
+```bash
+az devops configure --defaults organization=https://dev.azure.com/your-org project=your-project
 ```
 
-You should see ADO-related tools like `get_work_item`, `search_work_items`, etc.
+### 3.4 Verify the connection
+
+```bash
+az boards work-item show --id 1 --output table
+```
+
+You should see work item details printed. If you get a permissions error, verify your account has access to the project.
 
 ---
 
 ## Step 4: Query ADO for Your Work Item
 
-Use the work item we created in ADO: **1451532** (`Build a Weather Forecast API Service in Gosu`).
+Use the `az` CLI to fetch the work item from ADO:
 
-Prompt Copilot:
-
-```
-Fetch Azure DevOps work item 1451532 from project mobility-CTP.
-Read the full work item and summarize the requirements before generating code.
+```bash
+az boards work-item show --id 1451532 --output json
 ```
 
-Copilot will use the MCP server to query ADO and return the work item details. Verify it found the correct story with:
+To see just the title and description:
+
+```bash
+az boards work-item show --id 1451532 --query "{title: fields.\"System.Title\", description: fields.\"System.Description\"}" --output json
+```
+
+Review the output and verify it describes:
 - Endpoint: `GET /api/weather/forecast`
 - Tech stack: Gosu + Spark Java + Gradle
 - Upstream: Open-Meteo API
+
+Now feed the requirements into Copilot. Copy the work item output and prompt:
+
+```
+Here are the requirements from our ADO work item:
+
+<paste the az output here>
+
+Summarize these requirements before we start generating code.
+```
 
 ---
 
@@ -223,7 +240,7 @@ Now use Copilot to generate the project structure.
 Prompt Copilot:
 
 ```
-Based on the ADO work item you just read, scaffold a Gradle project for the Gosu
+Based on the ADO work item requirements, scaffold a Gradle project for the Gosu
 weather API service. Create:
 - build.gradle with the org.gosu-lang.gosu plugin, Spark Java, and org.json dependencies
 - settings.gradle
@@ -378,12 +395,13 @@ And that `mavenCentral()` is in your repositories block.
 - Check that port 4567 is not already in use: `lsof -i :4567`
 - Ensure `slf4j-simple` is in your dependencies (Spark requires an SLF4J binding)
 
-### ADO MCP server not connecting
+### `az boards` commands failing
 
-- Verify your PAT has not expired
+- Run `az login` to refresh your session if it has expired
+- Verify your defaults: `az devops configure --list`
 - Check that the organization and project names are correct
-- Try: `/mcp list` to see configured servers
-- Try: `/mcp remove ado-server` and re-add
+- Ensure the DevOps extension is installed: `az extension add --name azure-devops`
+- Test with a known work item ID: `az boards work-item show --id 1 --output table`
 
 ### Open-Meteo API returns errors
 
@@ -413,7 +431,7 @@ git checkout main
 |--------|-------------|
 | `step/00-prerequisites` | Checkpoint only (no reference files) |
 | `step/01-install-copilot` | Checkpoint only (no reference files) |
-| `step/02-configure-ado-mcp` | `reference/mcp-config-example.json` |
+| `step/02-configure-ado-mcp` | `reference/mcp-config-example.json` (legacy — `az` CLI needs no config file) |
 | `step/03-query-work-item` | `reference/expected-query-output.md` |
 | `step/04-scaffold-project` | `reference/build.gradle`, `settings.gradle`, `gradle.properties`, empty src dirs |
 | `step/05-generate-service` | `reference/src/main/gosu/weather/WeatherService.gs`, `WeatherApp.gs` |
@@ -424,8 +442,8 @@ git checkout main
 ## Resources
 
 - [GitHub Copilot CLI Documentation](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-in-the-command-line)
-- [Model Context Protocol (MCP)](https://modelcontextprotocol.io/)
-- [Azure DevOps MCP Server](https://github.com/microsoft/azure-devops-mcp)
+- [Azure CLI Documentation](https://learn.microsoft.com/cli/azure/)
+- [Azure DevOps CLI Extension](https://learn.microsoft.com/azure/devops/cli/)
 - [Gosu Language](https://gosu-lang.github.io/)
 - [Gosu Gradle Plugin](https://github.com/niclasr/gosu-gradle-plugin)
 - [Spark Java Framework](https://sparkjava.com/)
