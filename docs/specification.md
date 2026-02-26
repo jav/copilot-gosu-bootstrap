@@ -363,7 +363,7 @@ The `main` branch contains only documentation (no application code). Step branch
 | `main` | README, docs, .gitignore |
 | `step/00-prerequisites` | Same as main (checkpoint) |
 | `step/01-install-copilot` | Same as main (checkpoint) |
-| `step/02-configure-ado-mcp` | + `reference/mcp-config-example.json` |
+| `step/02-configure-ado` | Checkpoint — `az` CLI configured |
 | `step/03-query-work-item` | + `reference/expected-query-output.md` |
 | `step/04-scaffold-project` | + `reference/build.gradle`, `settings.gradle`, `gradle.properties`, empty src dirs |
 | `step/05-generate-service` | + `reference/src/main/gosu/weather/WeatherService.gs`, `WeatherApp.gs` |

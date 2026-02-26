@@ -161,7 +161,7 @@ What version of Java is installed on this machine?
 
 ## Step 3: Authenticate with Azure DevOps via the `az` CLI
 
-The Azure CLI (`az`) lets you query ADO work items directly from the terminal. Copilot does not need a separate MCP server — you will fetch the work item with `az` and pass the requirements to Copilot.
+The Azure CLI (`az`) lets you query ADO work items directly from the terminal. You will fetch the work item with `az` and pass the requirements to Copilot.
 
 ### 3.1 Install the Azure CLI (if needed)
 
@@ -430,7 +430,7 @@ git checkout main
 |--------|-------------|
 | `step/00-prerequisites` | Checkpoint only (no reference files) |
 | `step/01-install-copilot` | Checkpoint only (no reference files) |
-| `step/02-configure-ado-mcp` | `reference/mcp-config-example.json` (legacy — `az` CLI needs no config file) |
+| `step/02-configure-ado` | Checkpoint — `az` CLI configured |
 | `step/03-query-work-item` | `reference/expected-query-output.md` |
 | `step/04-scaffold-project` | `reference/build.gradle`, `settings.gradle`, `gradle.properties`, empty src dirs |
 | `step/05-generate-service` | `reference/src/main/gosu/weather/WeatherService.gs`, `WeatherApp.gs` |
