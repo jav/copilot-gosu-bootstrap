@@ -91,6 +91,20 @@ az account show --query name --output tsv
 
 If `copilot` is not found, continue to [Step 1](#step-1-install-the-github-copilot-cli).
 
+### Optional: Add shared Copilot skills from Engineering
+
+```bash
+copilot
+/plugin marketplace add https://if-it@dev.azure.com/if-it/mobility-CTP/_git/common-ai-adoption
+/plugin install common-ai-adoption-skills@common-ai-adoption
+/skills
+```
+
+### Guidewire/Gosu context to reuse in prompts
+
+- [`.github/copilot-instructions.md`](.github/copilot-instructions.md) for strict Gosu generation rules (`.gs`, `uses`, `function`, `for...in`).
+- [`docs/specification.md`](docs/specification.md) for the target architecture, dependencies, and test expectations.
+
 ---
 
 ## Step 1: Install the GitHub Copilot CLI
