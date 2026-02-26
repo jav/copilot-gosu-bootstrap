@@ -32,6 +32,8 @@ Before starting, ensure you have:
 | **Node.js** | 22 or higher | `node --version` |
 | **Java** | 11 or higher (OpenJDK recommended) | `java --version` |
 | **git** | Any recent version | `git --version` |
+| **IntelliJ IDEA** | 2024.1.5 or higher | — |
+| **GitHub Copilot plugin** | Installed in IntelliJ | IntelliJ → Settings → Plugins → "GitHub Copilot" |
 | **GitHub account** | With Copilot subscription (Individual, Business, or Enterprise) | — |
 | **Azure DevOps** | Access to an ADO organization with a project | — |
 | **ADO Personal Access Token** | With Work Items (Read) scope | See [Step 3](#step-3-configure-the-azure-devops-mcp-server) |
@@ -49,25 +51,21 @@ Take a moment to read the docs:
 - [`docs/specification.md`](docs/specification.md) — Full project spec
 - [`docs/ado-work-item.md`](docs/ado-work-item.md) — The work item you will query from ADO
 
+> **Gosu language guidance:** This repo includes [`.github/copilot-instructions.md`](.github/copilot-instructions.md) which teaches Copilot about Gosu syntax. The GitHub Copilot plugin for IntelliJ reads this file automatically so Copilot will prefer Gosu over Java when generating code in this project.
+
 ---
 
 ## Step 1: Install the GitHub Copilot CLI
 
 The GitHub Copilot CLI is a standalone terminal tool (separate from VS Code).
 
-### Option A: npm (all platforms)
-
-```bash
-npm install -g @anthropic-ai/claude-code
-```
-
-> **Note:** At time of writing, the standalone Copilot CLI may be distributed as `@githubnext/github-copilot-cli` or via the GitHub CLI extension. Check [GitHub Copilot CLI docs](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-in-the-command-line) for the latest installation method.
-
-### Option B: GitHub CLI extension
+### Install via GitHub CLI extension
 
 ```bash
 gh extension install github/gh-copilot
 ```
+
+> **Note:** Check [GitHub Copilot CLI docs](https://docs.github.com/en/copilot/using-github-copilot/using-github-copilot-in-the-command-line) for the latest installation method.
 
 ### Verify installation
 
@@ -123,7 +121,7 @@ MCP (Model Context Protocol) servers let Copilot access external tools. You will
 In your Copilot CLI session, run:
 
 ```
-/mcp add ado-server https://github.com/anthropics/azure-devops-mcp-server -- \
+/mcp add ado-server https://github.com/microsoft/azure-devops-mcp -- \
   --organization your-org \
   --project your-project \
   --token YOUR_ADO_PAT
@@ -291,7 +289,14 @@ All tests should pass. If any fail, share the output with Copilot and iterate.
 
 ### Copilot produces Java instead of Gosu
 
-Re-prompt with explicit instructions:
+This repo includes [`.github/copilot-instructions.md`](.github/copilot-instructions.md) which teaches Copilot about Gosu syntax. The GitHub Copilot plugin for IntelliJ reads this file automatically. If you are using the CLI instead, you can reference it explicitly:
+
+```
+@workspace Use the Gosu language conventions described in .github/copilot-instructions.md.
+Rewrite this in Gosu (.gs files), not Java.
+```
+
+You can also re-prompt with explicit instructions:
 
 ```
 Rewrite this in Gosu (.gs files), not Java. Use Gosu syntax:
