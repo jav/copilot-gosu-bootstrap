@@ -55,6 +55,29 @@ Take a moment to read the docs:
 
 ---
 
+## Step 0.5: Verify `az` and Copilot CLI Availability
+
+Before you start with Copilot prompts in this repo, confirm both CLIs are available:
+
+```bash
+az version
+gh copilot --version
+```
+
+If `az` is not installed, use Scoop (preferred):
+
+```bash
+scoop install azure-cli
+az version
+```
+
+You can also use the official Azure CLI install guidance:
+- [Install Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli)
+
+If `gh copilot` is not found, continue to [Step 1](#step-1-install-the-github-copilot-cli).
+
+---
+
 ## Step 1: Install the GitHub Copilot CLI
 
 The GitHub Copilot CLI is a standalone terminal tool (separate from VS Code).
