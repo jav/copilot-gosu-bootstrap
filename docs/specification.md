@@ -350,8 +350,7 @@ This specification lives inside a tutorial repository with the following organiz
 copilot-bootstrap/          (this repo)
 ├── README.md               Step-by-step tutorial for developers
 ├── docs/
-│   ├── specification.md    This file — full project spec
-│   └── ado-work-item.md    Content for the ADO work item
+│   └── specification.md    This file — full project spec
 ├── .gitignore
 ```
 
@@ -378,4 +377,4 @@ git diff main..step/04-scaffold-project -- reference/
 
 ### ADO Work Item
 
-The file `docs/ado-work-item.md` contains the exact content to paste into an Azure DevOps User Story. During the tutorial, developers configure Copilot's ADO MCP server, then prompt Copilot to find and read this work item to understand what to build.
+The work item lives in Azure DevOps. During the tutorial, developers use the `az` CLI to fetch the work item and feed its requirements into Copilot.

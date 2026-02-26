@@ -49,7 +49,6 @@ cd copilot-bootstrap
 
 Take a moment to read the docs:
 - [`docs/specification.md`](docs/specification.md) — Full project spec
-- [`docs/ado-work-item.md`](docs/ado-work-item.md) — The work item you will query from ADO
 
 > **Gosu language guidance:** This repo includes [`.github/copilot-instructions.md`](.github/copilot-instructions.md) which teaches Copilot about Gosu syntax. The GitHub Copilot plugin for IntelliJ reads this file automatically so Copilot will prefer Gosu over Java when generating code in this project.
 
